@@ -3,7 +3,7 @@ project(hardware_verification)
 find_package(verilator REQUIRED)
 
 
-add_executable(testbench tb/testbench.cpp)
+add_executable(test_seq_arith tb/test_seq_arith.cpp)
 
 
 verilate(testbench

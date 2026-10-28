@@ -1,0 +1,39 @@
+name: SystemVerilog CMake CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  verification:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install System Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y verilator libgtest-dev
+
+    - name: Static Code Analysis (Lint)
+      run: verilator --lint-only -Wall src/blink.sv
+
+    - name: Configure CMake Build System
+      run: cmake -B build
+
+    - name: Compile Hardware Model and Testbench
+      run: cmake --build build -j4
+
+    - name: Execute
+      run: ./build/test_seq_arith
+
+    - name: Archive VCD Waveforms
+      if: always() # Сохранение дампов даже при провале тестов для пост-анализа
+      uses: actions/upload-artifact@v4
+      with:
+        name: simulation-waveforms
+        path: "*.vcd"

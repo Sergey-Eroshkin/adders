@@ -7,6 +7,6 @@ add_executable(testbench tb/testbench.cpp)
 
 
 verilate(testbench
-    SOURCES src/calc.sv
+    SOURCES src/calc.sv src/one_bit_summer.sv src/summer.sv src/subtracter.sv
     TRACE
 )
